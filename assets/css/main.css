@@ -4,9 +4,26 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600&display=swap');
 
+/* Balonku Font - Add the font file to assets/fonts/ directory */
+/* If you have the Balonku font file, uncomment and update the path: */
+/*
+@font-face {
+  font-family: 'Balonku';
+  src: url('~/assets/fonts/Balonku-Regular.woff2') format('woff2'),
+       url('~/assets/fonts/Balonku-Regular.woff') format('woff'),
+       url('~/assets/fonts/Balonku-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* For now, using Comic Neue as Balonku substitute */
+/* You can download Balonku from dafont.com and add it to assets/fonts/ */
+
 /* Global font setting */
 * {
-  font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Comic Neue', cursive, sans-serif;
 }
 
 @layer base {

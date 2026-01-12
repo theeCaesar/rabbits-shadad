@@ -240,26 +240,38 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               </div>
             </CardHeader>
             <CardContent :class="expandedPostId === journal._id ? 'p-6 pt-4' : 'p-2 pt-1'">
-              <div v-if="journal.images && journal.images.length > 0" :class="[
-                'mb-2',
-                expandedPostId === journal._id ? 'w-full' : ''
-              ]">
-                <img 
-                  :src="getImageUrl(journal.images[0])" 
-                  :alt="'Journal image'"
-                  :class="[
-                    'w-full object-cover rounded',
-                    expandedPostId === journal._id ? 'h-64 md:h-96' : 'h-32'
-                  ]"
-                  @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
-                />
+              <!-- Expanded layout: image left, content right -->
+              <div v-if="expandedPostId === journal._id" class="flex flex-col md:flex-row gap-6">
+                <!-- Image on left -->
+                <div v-if="journal.images && journal.images.length > 0" class="flex-shrink-0 md:w-1/2">
+                  <img 
+                    :src="getImageUrl(journal.images[0])" 
+                    :alt="'Journal image'"
+                    class="w-full h-auto object-cover rounded-lg"
+                    @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
+                  />
+                </div>
+                <!-- Content on right -->
+                <div class="flex-1 flex flex-col">
+                  <p class="text-gray-600 mb-4 leading-relaxed text-base whitespace-pre-wrap">
+                    {{ journal.text }}
+                  </p>
+                </div>
               </div>
-              <p :class="[
-                'text-gray-600 mb-2 leading-relaxed',
-                expandedPostId === journal._id ? 'text-base whitespace-pre-wrap' : 'line-clamp-2 text-xs leading-snug'
-              ]">
-                {{ expandedPostId === journal._id ? journal.text : (journal.text.substring(0, 60) + (journal.text.length > 60 ? '...' : '')) }}
-              </p>
+              <!-- Collapsed layout: stacked -->
+              <div v-else>
+                <div v-if="journal.images && journal.images.length > 0" class="mb-2">
+                  <img 
+                    :src="getImageUrl(journal.images[0])" 
+                    :alt="'Journal image'"
+                    class="w-full h-32 object-cover rounded"
+                    @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
+                  />
+                </div>
+                <p class="text-gray-600 mb-1.5 line-clamp-2 text-xs leading-snug">
+                  {{ journal.text.substring(0, 60) }}{{ journal.text.length > 60 ? '...' : '' }}
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -279,7 +291,7 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
           </div>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
+        <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-grow">
           <Card 
             v-for="rabbit in rabbits" 
             :key="rabbit._id"
@@ -315,7 +327,7 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               </div>
               <div class="flex items-center gap-2 text-xs text-gray-600" :class="expandedPostId === rabbit._id ? 'mt-2' : ''">
                 <div v-if="rabbit.age" class="flex items-center gap-0.5">
-                  <User :class="expandedPostId === rabbit._id ? 'w-4 h-4' : 'w-2.5 h-2.5'" />
+                  <span :class="expandedPostId === rabbit._id ? 'text-base' : 'text-xs'">🐰</span>
                   <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ rabbit.age }} years</span>
                 </div>
                 <div v-if="rabbit.birthDate" class="flex items-center gap-0.5">
