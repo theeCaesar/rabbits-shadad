@@ -2,28 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600&family=Bubblegum+Sans&family=Chewy&display=swap');
 
-/* Balonku Font - Add the font file to assets/fonts/ directory */
-/* If you have the Balonku font file, uncomment and update the path: */
-/*
-@font-face {
-  font-family: 'Balonku';
-  src: url('~/assets/fonts/Balonku-Regular.woff2') format('woff2'),
-       url('~/assets/fonts/Balonku-Regular.woff') format('woff'),
-       url('~/assets/fonts/Balonku-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+/* Ensure fonts are loaded before applying */
+@layer base {
+  html {
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif !important;
+  }
 }
-*/
 
-/* For now, using Comic Neue as Balonku substitute */
-/* You can download Balonku from dafont.com and add it to assets/fonts/ */
+/* Global font setting - Using Bubblegum Sans (playful font from Google Fonts) */
+html,
+body {
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif !important;
+}
 
-/* Global font setting */
 * {
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: inherit !important;
 }
 
 @layer base {
@@ -80,7 +75,7 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif !important;
     font-feature-settings: "cv11", "ss01";
     font-variation-settings: "opsz" auto;
     text-rendering: optimizeLegibility;
@@ -239,7 +234,7 @@
   }
 
   .retro-title {
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     font-weight: 700;
     color: #333333;
     text-shadow: 
@@ -270,7 +265,7 @@
 
   .retro-subtitle {
     color: #666666;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     font-weight: 400;
     text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
     letter-spacing: 1px;
@@ -289,7 +284,7 @@
       inset 0 2px 5px rgba(255, 255, 255, 0.3),
       0 0 10px rgba(196, 69, 105, 0.3);
     transition: all 0.3s ease;
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     position: relative;
   }
 
@@ -315,7 +310,7 @@
       inset 0 2px 5px rgba(255, 255, 255, 0.3),
       0 0 15px rgba(196, 69, 105, 0.4);
     transition: all 0.3s ease;
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     padding: 12px 24px;
     position: relative;
   }
@@ -350,7 +345,7 @@
       inset 0 2px 5px rgba(255, 255, 255, 0.1),
       0 0 10px rgba(220, 20, 60, 0.2);
     transition: all 0.3s ease;
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
   }
 
   .retro-button-outline:hover {
@@ -375,7 +370,7 @@
       0 4px 10px rgba(255, 71, 87, 0.4),
       inset 0 2px 5px rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
   }
 
   .retro-button-delete:hover {
@@ -390,7 +385,7 @@
     border: 2px solid #ff6b9d;
     border-radius: 8px;
     color: #fff;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     font-size: 0.75rem;
     text-transform: lowercase;
     letter-spacing: 0.5px;
@@ -407,7 +402,7 @@
     border: 3px solid #ff6b9d;
     border-radius: 10px;
     color: #333333;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
       box-shadow: 
       0 2px 8px rgba(255, 107, 157, 0.3),
       inset 0 2px 5px rgba(255, 255, 255, 0.5),
@@ -427,7 +422,7 @@
 
   .retro-input::placeholder {
     color: rgba(196, 69, 105, 0.6);
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
   }
 
   .retro-card {
@@ -702,7 +697,7 @@
   }
 
   main .retro-card .retro-title {
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     font-weight: 600;
     color: #333333;
     text-shadow: 
@@ -731,7 +726,7 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     transition: all 0.3s ease;
-    font-family: 'Comic Neue', cursive, sans-serif;
+    font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     padding: 10px 20px;
   }
 

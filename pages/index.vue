@@ -215,16 +215,9 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader :class="expandedPostId === journal._id ? 'p-6 pb-4' : 'p-2 pb-1'">
+            <CardHeader v-if="expandedPostId === journal._id" :class="'p-6 pb-4'">
               <div class="flex items-start justify-between gap-4">
-                <CardTitle :class="[
-                  'retro-title mb-1',
-                  expandedPostId === journal._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
-                ]">
-                  Journal Entry
-                </CardTitle>
                 <Button 
-                  v-if="expandedPostId === journal._id"
                   @click.stop="toggleExpandPost(journal._id)"
                   class="retro-button-close flex-shrink-0"
                   size="sm"
@@ -232,14 +225,8 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                   <X class="w-4 h-4" />
                 </Button>
               </div>
-              <div class="flex items-center gap-2 text-xs text-gray-600" :class="expandedPostId === journal._id ? 'mt-2' : ''">
-                <div class="flex items-center gap-0.5">
-                  <Calendar :class="expandedPostId === journal._id ? 'w-4 h-4' : 'w-2.5 h-2.5'" />
-                  <span :class="expandedPostId === journal._id ? 'text-sm' : 'text-xs'">{{ formatDate(journal.date) }}</span>
-                </div>
-              </div>
             </CardHeader>
-            <CardContent :class="expandedPostId === journal._id ? 'p-6 pt-4' : 'p-2 pt-1'">
+            <CardContent :class="expandedPostId === journal._id ? 'p-6 pt-4' : 'p-2'">
               <!-- Expanded layout: image left, content right -->
               <div v-if="expandedPostId === journal._id" class="flex flex-col md:flex-row gap-6">
                 <!-- Image on left -->
@@ -250,6 +237,11 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                     class="w-full h-auto object-cover rounded-lg"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
+                  <!-- Date below image -->
+                  <div class="flex items-center gap-2 text-sm text-gray-600 mt-2">
+                    <Calendar class="w-4 h-4" />
+                    <span>{{ formatDate(journal.date) }}</span>
+                  </div>
                 </div>
                 <!-- Content on right -->
                 <div class="flex-1 flex flex-col">
@@ -258,7 +250,7 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                   </p>
                 </div>
               </div>
-              <!-- Collapsed layout: stacked -->
+              <!-- Collapsed layout: image and date only -->
               <div v-else>
                 <div v-if="journal.images && journal.images.length > 0" class="mb-2">
                   <img 
@@ -268,9 +260,11 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
-                <p class="text-gray-600 mb-1.5 line-clamp-2 text-xs leading-snug">
-                  {{ journal.text.substring(0, 60) }}{{ journal.text.length > 60 ? '...' : '' }}
-                </p>
+                <!-- Date below image -->
+                <div class="flex items-center gap-1 text-xs text-gray-600">
+                  <Calendar class="w-2.5 h-2.5" />
+                  <span>{{ formatDate(journal.date) }}</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -308,16 +302,9 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader :class="expandedPostId === rabbit._id ? 'p-6 pb-4' : 'p-2 pb-1'">
-              <div class="flex items-start justify-between gap-4">
-                <CardTitle :class="[
-                  'retro-title mb-1',
-                  expandedPostId === rabbit._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
-                ]">
-                  {{ rabbit.name }}
-                </CardTitle>
+            <CardHeader v-if="expandedPostId === rabbit._id" :class="'p-6 pb-4'">
+              <div class="flex items-start justify-end">
                 <Button 
-                  v-if="expandedPostId === rabbit._id"
                   @click.stop="toggleExpandPost(rabbit._id)"
                   class="retro-button-close flex-shrink-0"
                   size="sm"
@@ -325,18 +312,8 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                   <X class="w-4 h-4" />
                 </Button>
               </div>
-              <div class="flex items-center gap-2 text-xs text-gray-600" :class="expandedPostId === rabbit._id ? 'mt-2' : ''">
-                <div v-if="rabbit.age" class="flex items-center gap-0.5">
-                  <span :class="expandedPostId === rabbit._id ? 'text-base' : 'text-xs'">🐰</span>
-                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ rabbit.age }} years</span>
-                </div>
-                <div v-if="rabbit.birthDate" class="flex items-center gap-0.5">
-                  <Calendar :class="expandedPostId === rabbit._id ? 'w-4 h-4' : 'w-2.5 h-2.5'" />
-                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ formatDate(rabbit.birthDate) }}</span>
-                </div>
-              </div>
             </CardHeader>
-            <CardContent :class="expandedPostId === rabbit._id ? 'p-6 pt-4' : 'p-2 pt-1'">
+            <CardContent :class="expandedPostId === rabbit._id ? 'p-6 pt-4' : 'p-2'">
               <!-- Expanded layout: image left, content right -->
               <div v-if="expandedPostId === rabbit._id" class="flex flex-col md:flex-row gap-6">
                 <!-- Image on left -->
@@ -350,6 +327,19 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                 </div>
                 <!-- Content on right -->
                 <div class="flex-1 flex flex-col">
+                  <div class="mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">{{ rabbit.name }}</h2>
+                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                      <div v-if="rabbit.age" class="flex items-center gap-1">
+                        <span>🐰</span>
+                        <span>{{ rabbit.age }} years</span>
+                      </div>
+                      <div v-if="rabbit.birthDate" class="flex items-center gap-1">
+                        <Calendar class="w-4 h-4" />
+                        <span>{{ formatDate(rabbit.birthDate) }}</span>
+                      </div>
+                    </div>
+                  </div>
                   <p v-if="rabbit.description" class="text-gray-600 mb-4 leading-relaxed text-base whitespace-pre-wrap">
                     {{ rabbit.description }}
                   </p>
@@ -363,7 +353,7 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                   </div>
                 </div>
               </div>
-              <!-- Collapsed layout: stacked -->
+              <!-- Collapsed layout: image first, then name with age -->
               <div v-else>
                 <div v-if="rabbit.images && rabbit.images.length > 0" class="mb-2">
                   <img 
@@ -373,9 +363,16 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
-                <p v-if="rabbit.description" class="text-gray-600 mb-1.5 line-clamp-2 text-xs leading-snug">
-                  {{ rabbit.description.substring(0, 60) }}{{ rabbit.description.length > 60 ? '...' : '' }}
-                </p>
+                <!-- Name and age on same line -->
+                <div class="flex items-center gap-2">
+                  <CardTitle class="retro-title text-sm md:text-base line-clamp-1">
+                    {{ rabbit.name }}
+                  </CardTitle>
+                  <span v-if="rabbit.age" class="text-xs text-gray-600 flex items-center gap-0.5">
+                    <span>🐰</span>
+                    <span>{{ rabbit.age }} years</span>
+                  </span>
+                </div>
               </div>
             </CardContent>
           </Card>

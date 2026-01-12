@@ -254,12 +254,12 @@ async function handleSubmit() {
 .retro-input,
 .retro-input input,
 .retro-input textarea {
-  font-family: 'Comic Neue', cursive, sans-serif;
+  font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
   font-weight: 400;
 }
 
 label {
-  font-family: 'Comic Neue', cursive, sans-serif;
+  font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
   font-weight: 600;
 }
 </style>

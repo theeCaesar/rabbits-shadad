@@ -129,7 +129,7 @@ watch(profile, (newProfile) => {
 
 <style scoped>
 .retro-content {
-  font-family: 'Comic Neue', cursive;
+  font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif !important;
   line-height: 1.8;
   color: #333;
   font-size: 1.1rem;
