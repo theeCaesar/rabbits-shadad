@@ -105,11 +105,27 @@ body {
     object-fit: contain;
   }
 
+  .desktop-only {
+    display: block;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     .jumping-rabbit {
-      width: 60px;
-      height: 60px;
-      opacity: 0.5;
+      width: 200px !important;
+      height: 200px !important;
+      opacity: 0.8 !important;
+    }
+
+    .desktop-only {
+      display: none;
+    }
+
+    .mobile-only {
+      display: block;
     }
   }
 
@@ -837,9 +853,9 @@ body {
 
   @media (max-width: 480px) {
     .jumping-rabbit {
-      width: 40px;
-      height: 40px;
-      opacity: 0.3;
+      width: 200px;
+      height: 200px;
+      opacity: 0.8;
     }
 
     .retro-title {

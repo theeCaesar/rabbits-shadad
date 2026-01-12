@@ -116,7 +116,12 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
     <img 
       :src="rabbitImage" 
       alt="Rabbit" 
-      class="jumping-rabbit rabbit-2"
+      class="jumping-rabbit rabbit-2 desktop-only"
+    />
+    <img 
+      :src="rabbitImageNew" 
+      alt="Rabbit" 
+      class="jumping-rabbit rabbit-2 mobile-only"
     />
     <img 
       :src="rabbitImageNew" 
@@ -126,7 +131,12 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
     <img 
       :src="rabbitImage" 
       alt="Rabbit" 
-      class="jumping-rabbit rabbit-4"
+      class="jumping-rabbit rabbit-4 desktop-only"
+    />
+    <img 
+      :src="rabbitImageNew" 
+      alt="Rabbit" 
+      class="jumping-rabbit rabbit-4 mobile-only"
     />
     <img 
       :src="rabbitImageNew" 
@@ -136,7 +146,12 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
     <img 
       :src="rabbitImage" 
       alt="Rabbit" 
-      class="jumping-rabbit rabbit-6"
+      class="jumping-rabbit rabbit-6 desktop-only"
+    />
+    <img 
+      :src="rabbitImageNew" 
+      alt="Rabbit" 
+      class="jumping-rabbit rabbit-6 mobile-only"
     />
     <div class="flex flex-1 justify-center">
       <div class="flex flex-col md:flex-row max-w-[1800px] w-full">
