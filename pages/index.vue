@@ -5,7 +5,7 @@ import { useAuthStore } from '~/stores/auth'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { Plus, Calendar, User, Tag, FileText, Users, X } from 'lucide-vue-next'
+import { Plus, Calendar, User, Tag, FileText, Users, X, Volume2, VolumeX } from 'lucide-vue-next'
 
 const router = useRouter()
 const blogStore = useBlogStore()
@@ -13,11 +13,23 @@ const authStore = useAuthStore()
 
 const activeTab = ref<'journals' | 'rabbits'>('journals')
 const expandedPostId = ref<string | null>(null)
+const audioRef = ref<HTMLAudioElement | null>(null)
+const isPlaying = ref(true)
 
 // Initialize data from API on mount
 onMounted(() => {
   authStore.initializeAuth()
   blogStore.initializeData()
+  
+  // Try to play music automatically (may be blocked by browser autoplay policy)
+  setTimeout(() => {
+    if (audioRef.value) {
+      audioRef.value.play().catch(() => {
+        // If autoplay fails, set isPlaying to false so user can click to play
+        isPlaying.value = false
+      })
+    }
+  }, 500)
 }) 
 
 const journals = computed(() => blogStore.journals || [])
@@ -61,6 +73,17 @@ function handleLogout() {
   router.push('/')
 }
 
+function toggleMusic() {
+  if (audioRef.value) {
+    if (isPlaying.value) {
+      audioRef.value.pause()
+    } else {
+      audioRef.value.play()
+    }
+    isPlaying.value = !isPlaying.value
+  }
+}
+
 // Import rabbit images from assets
 import rabbitImage from '~/assets/image.png'
 import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
@@ -69,6 +92,21 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
 
 <template>
   <div class="min-h-screen retro-bg flex flex-col">
+    <!-- Background Music -->
+    <audio ref="audioRef" loop>
+      <source src="/background-music.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Music Toggle Button -->
+    <Button
+      @click="toggleMusic"
+      class="fixed top-4 right-4 z-50 retro-button-music"
+      size="lg"
+    >
+      <Volume2 v-if="!isPlaying" class="w-5 h-5" />
+      <VolumeX v-else class="w-5 h-5" />
+    </Button>
+    
     <!-- Animated Floating Rabbits -->
     <img 
       :src="rabbitImageNew" 
