@@ -5,7 +5,7 @@ import { useAuthStore } from '~/stores/auth'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { Plus, Calendar, User, Tag, FileText, Users, X, Volume2, VolumeX } from 'lucide-vue-next'
+import { Plus, Calendar, User, Tag, FileText, Users, X, Pencil, Home, Volume2, VolumeX } from 'lucide-vue-next'
 
 const router = useRouter()
 const blogStore = useBlogStore()
@@ -17,9 +17,11 @@ const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(true)
 
 // Initialize data from API on mount
-onMounted(() => {
+onMounted(async () => {
   authStore.initializeAuth()
   blogStore.initializeData()
+  // Fetch home data for personal image
+  await blogStore.fetchHome()
   
   // Try to play music automatically (may be blocked by browser autoplay policy)
   setTimeout(() => {
@@ -34,6 +36,15 @@ onMounted(() => {
 
 const journals = computed(() => blogStore.journals || [])
 const rabbits = computed(() => blogStore.rabbits || [])
+
+// Get personal image from home data
+const homePersonalImage = computed(() => {
+  const home = blogStore.getHome()
+  if (home && home.personalImage) {
+    return getImageUrl(home.personalImage)
+  }
+  return ''
+})
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -87,7 +98,6 @@ function toggleMusic() {
 // Import rabbit images from assets
 import rabbitImage from '~/assets/image.png'
 import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
-import profileImage from '~/assets/css/1000057212-removebg-preview.png'
 </script>
 
 <template>
@@ -103,8 +113,8 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
       class="fixed top-4 right-4 z-50 retro-button-music"
       size="lg"
     >
-      <Volume2 v-if="!isPlaying" class="w-5 h-5" />
-      <VolumeX v-else class="w-5 h-5" />
+      <VolumeX v-if="!isPlaying" class="w-5 h-5" />
+      <Volume2 v-else class="w-5 h-5" />
     </Button>
     
     <!-- Animated Floating Rabbits -->
@@ -160,12 +170,15 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
           <div class="sticky top-6">
             <!-- Profile Image -->
             <div class="retro-card p-4 md:p-8 mb-4 md:mb-6 text-center flex flex-col items-center">
-              <div class="w-48 h-48 md:w-80 md:h-80 bg-white rounded-lg border-4 border-pink-300 flex items-center justify-center mb-4 md:mb-6 overflow-hidden">
+              <div class="w-48 h-48 md:w-80 md:h-80 bg-transparent rounded-lg border-4 border-pink-300 flex items-center justify-center mb-4 md:mb-6 overflow-hidden">
                 <img 
-                  :src="profileImage" 
+                  v-if="homePersonalImage"
+                  :src="homePersonalImage" 
                   alt="Profile"
                   class="w-full h-full object-contain object-center"
+                  style="background: transparent;"
                 />
+                <span v-else class="text-6xl">🐰</span>
               </div>
               <!-- Name Title -->
               <h1 class="retro-title text-2xl md:text-4xl lg:text-5xl font-bold">
@@ -190,6 +203,13 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               >
                 <Plus class="w-4 h-4 mr-2" />
                 New Rabbit
+              </Button>
+              <Button 
+                @click="router.push('/dashboard/edit-home')"
+                class="retro-button-outline w-full"
+              >
+                <Home class="w-4 h-4 mr-2" />
+                Update Home Images
               </Button>
               <Button 
                 @click="handleLogout"
@@ -268,15 +288,37 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader v-if="expandedPostId === journal._id" :class="'p-6 pb-4'">
+            <CardHeader :class="expandedPostId === journal._id ? 'p-6 pb-4' : 'p-2 pb-1'">
               <div class="flex items-start justify-between gap-4">
-                <Button 
-                  @click.stop="toggleExpandPost(journal._id)"
-                  class="retro-button-close flex-shrink-0"
-                  size="sm"
-                >
-                  <X class="w-4 h-4" />
-                </Button>
+                <CardTitle :class="[
+                  'retro-title mb-1',
+                  expandedPostId === journal._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
+                ]">
+                  Journal Entry
+                </CardTitle>
+                <div v-if="expandedPostId === journal._id" class="flex items-center gap-2">
+                  <Button 
+                    v-if="authStore.isAdmin"
+                    @click.stop="router.push(`/dashboard/edit-journal/${journal._id}`)"
+                    class="retro-button-edit flex-shrink-0"
+                    size="sm"
+                  >
+                    <Pencil class="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    @click.stop="toggleExpandPost(journal._id)"
+                    class="retro-button-close flex-shrink-0"
+                    size="sm"
+                  >
+                    <X class="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div v-if="expandedPostId === journal._id" class="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                <div class="flex items-center gap-0.5">
+                  <Calendar class="w-4 h-4" />
+                  <span class="text-sm">{{ formatDate(journal.date) }}</span>
+                </div>
               </div>
             </CardHeader>
             <CardContent :class="expandedPostId === journal._id ? 'p-6 pt-4' : 'p-2'">
@@ -290,11 +332,6 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                     class="w-full h-auto object-cover rounded-lg"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
-                  <!-- Date below image -->
-                  <div class="flex items-center gap-2 text-sm text-gray-600 mt-2">
-                    <Calendar class="w-4 h-4" />
-                    <span>{{ formatDate(journal.date) }}</span>
-                  </div>
                 </div>
                 <!-- Content on right -->
                 <div class="flex-1 flex flex-col">
@@ -355,18 +392,44 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader v-if="expandedPostId === rabbit._id" :class="'p-6 pb-4'">
-              <div class="flex items-start justify-end">
-                <Button 
-                  @click.stop="toggleExpandPost(rabbit._id)"
-                  class="retro-button-close flex-shrink-0"
-                  size="sm"
-                >
-                  <X class="w-4 h-4" />
-                </Button>
+            <CardHeader :class="expandedPostId === rabbit._id ? 'p-6 pb-4' : 'p-2 pb-1'">
+              <div class="flex items-start justify-between gap-4">
+                <CardTitle :class="[
+                  'retro-title mb-1',
+                  expandedPostId === rabbit._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
+                ]">
+                  {{ rabbit.name }}
+                </CardTitle>
+                <div v-if="expandedPostId === rabbit._id" class="flex items-center gap-2">
+                  <Button 
+                    v-if="authStore.isAdmin"
+                    @click.stop="router.push(`/dashboard/edit-rabbit/${rabbit._id}`)"
+                    class="retro-button-edit flex-shrink-0"
+                    size="sm"
+                  >
+                    <Pencil class="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    @click.stop="toggleExpandPost(rabbit._id)"
+                    class="retro-button-close flex-shrink-0"
+                    size="sm"
+                  >
+                    <X class="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-gray-600" :class="expandedPostId === rabbit._id ? 'mt-2' : ''">
+                <div v-if="rabbit.age" class="flex items-center gap-0.5">
+                  <span :class="expandedPostId === rabbit._id ? 'text-base' : 'text-xs'">🐰</span>
+                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ rabbit.age }} years</span>
+                </div>
+                <div v-if="rabbit.birthDate" class="flex items-center gap-0.5">
+                  <Calendar :class="expandedPostId === rabbit._id ? 'w-4 h-4' : 'w-2.5 h-2.5'" />
+                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ formatDate(rabbit.birthDate) }}</span>
+                </div>
               </div>
             </CardHeader>
-            <CardContent :class="expandedPostId === rabbit._id ? 'p-6 pt-4' : 'p-2'">
+            <CardContent :class="expandedPostId === rabbit._id ? 'p-6 pt-4' : 'p-2 pt-1'">
               <!-- Expanded layout: image left, content right -->
               <div v-if="expandedPostId === rabbit._id" class="flex flex-col md:flex-row gap-6">
                 <!-- Image on left -->
@@ -380,19 +443,6 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                 </div>
                 <!-- Content on right -->
                 <div class="flex-1 flex flex-col">
-                  <div class="mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-2">{{ rabbit.name }}</h2>
-                    <div class="flex items-center gap-4 text-sm text-gray-600">
-                      <div v-if="rabbit.age" class="flex items-center gap-1">
-                        <span>🐰</span>
-                        <span>{{ rabbit.age }} years</span>
-                      </div>
-                      <div v-if="rabbit.birthDate" class="flex items-center gap-1">
-                        <Calendar class="w-4 h-4" />
-                        <span>{{ formatDate(rabbit.birthDate) }}</span>
-                      </div>
-                    </div>
-                  </div>
                   <p v-if="rabbit.description" class="text-gray-600 mb-4 leading-relaxed text-base whitespace-pre-wrap">
                     {{ rabbit.description }}
                   </p>
@@ -406,7 +456,7 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                   </div>
                 </div>
               </div>
-              <!-- Collapsed layout: image first, then name with age -->
+              <!-- Collapsed layout: stacked -->
               <div v-else>
                 <div v-if="rabbit.images && rabbit.images.length > 0" class="mb-2">
                   <img 
@@ -416,16 +466,9 @@ import profileImage from '~/assets/css/1000057212-removebg-preview.png'
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
-                <!-- Name and age on same line -->
-                <div class="flex items-center gap-2">
-                  <CardTitle class="retro-title text-sm md:text-base line-clamp-1">
-                    {{ rabbit.name }}
-                  </CardTitle>
-                  <span v-if="rabbit.age" class="text-xs text-gray-600 flex items-center gap-0.5">
-                    <span>🐰</span>
-                    <span>{{ rabbit.age }} years</span>
-                  </span>
-                </div>
+                <p v-if="rabbit.description" class="text-gray-600 mb-1.5 line-clamp-2 text-xs leading-snug">
+                  {{ rabbit.description.substring(0, 60) }}{{ rabbit.description.length > 60 ? '...' : '' }}
+                </p>
               </div>
             </CardContent>
           </Card>

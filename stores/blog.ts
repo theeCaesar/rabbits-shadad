@@ -23,9 +23,18 @@ export interface Rabbit {
   updatedAt: string
 }
 
+export interface Home {
+  _id: string
+  rabbitImages: string[]
+  personalImage: string
+  createdAt: string
+  updatedAt: string
+}
+
 export const useBlogStore = defineStore('blog', () => {
   const journals = ref<Journal[]>([])
   const rabbits = ref<Rabbit[]>([])
+  const homes = ref<Home[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
   
@@ -191,17 +200,219 @@ export const useBlogStore = defineStore('blog', () => {
     return rabbits.value.find(rabbit => rabbit._id === id)
   }
 
+  // Update journal (admin only)
+  async function updateJournal(id: string, formData: FormData) {
+    if (!authStore.isAuthenticated) {
+      throw new Error('Authentication required')
+    }
+
+    try {
+      const headers: HeadersInit = {
+        ...authStore.getAuthHeader(),
+      }
+      delete (headers as any)['Content-Type']
+      
+      const response = await fetch(`${authStore.baseURL}/api/v1/dashboard/journals/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: formData,
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        const errorMsg = data.message || data.error || 'Failed to update journal'
+        return { success: false, error: errorMsg }
+      }
+      
+      if (data.status === 'success') {
+        await fetchJournals()
+        return { success: true, data: data.data.journal }
+      } else {
+        return { success: false, error: data.message || 'Failed to update journal' }
+      }
+    } catch (e) {
+      console.error('Error updating journal:', e)
+      return { success: false, error: 'Network error. Please try again.' }
+    }
+  }
+
+  // Delete journal (admin only)
+  async function deleteJournal(id: string) {
+    if (!authStore.isAuthenticated) {
+      throw new Error('Authentication required')
+    }
+
+    try {
+      const response = await fetch(`${authStore.baseURL}/api/v1/dashboard/journals/${id}`, {
+        method: 'DELETE',
+        headers: authStore.getAuthHeader(),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        const errorMsg = data.message || data.error || 'Failed to delete journal'
+        return { success: false, error: errorMsg }
+      }
+      
+      await fetchJournals()
+      return { success: true }
+    } catch (e) {
+      console.error('Error deleting journal:', e)
+      return { success: false, error: 'Network error. Please try again.' }
+    }
+  }
+
+  // Update rabbit (admin only)
+  async function updateRabbit(id: string, formData: FormData) {
+    if (!authStore.isAuthenticated) {
+      throw new Error('Authentication required')
+    }
+
+    try {
+      const headers: HeadersInit = {
+        ...authStore.getAuthHeader(),
+      }
+      delete (headers as any)['Content-Type']
+      
+      const response = await fetch(`${authStore.baseURL}/api/v1/dashboard/rabbits/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: formData,
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        const errorMsg = data.message || data.error || 'Failed to update rabbit'
+        return { success: false, error: errorMsg }
+      }
+      
+      if (data.status === 'success') {
+        await fetchRabbits()
+        return { success: true, data: data.data.rabbit }
+      } else {
+        return { success: false, error: data.message || 'Failed to update rabbit' }
+      }
+    } catch (e) {
+      console.error('Error updating rabbit:', e)
+      return { success: false, error: 'Network error. Please try again.' }
+    }
+  }
+
+  // Delete rabbit (admin only)
+  async function deleteRabbit(id: string) {
+    if (!authStore.isAuthenticated) {
+      throw new Error('Authentication required')
+    }
+
+    try {
+      const response = await fetch(`${authStore.baseURL}/api/v1/dashboard/rabbits/${id}`, {
+        method: 'DELETE',
+        headers: authStore.getAuthHeader(),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        const errorMsg = data.message || data.error || 'Failed to delete rabbit'
+        return { success: false, error: errorMsg }
+      }
+      
+      await fetchRabbits()
+      return { success: true }
+    } catch (e) {
+      console.error('Error deleting rabbit:', e)
+      return { success: false, error: 'Network error. Please try again.' }
+    }
+  }
+
+  // Fetch home data from API
+  async function fetchHome() {
+    loading.value = true
+    error.value = null
+    try {
+      const response = await fetch(`${authStore.baseURL}/api/v1/home`)
+      const data = await response.json()
+      if (data.status === 'success') {
+        // Store the homes data - handle both array and single object responses
+        const homeData = data.data.homes || data.data.home || []
+        homes.value = Array.isArray(homeData) ? homeData : [homeData]
+        return { success: true, data: homes.value }
+      } else {
+        error.value = data.message || 'Failed to fetch home'
+        homes.value = []
+        return { success: false, error: error.value }
+      }
+    } catch (e) {
+      error.value = 'Network error. Please try again.'
+      homes.value = []
+      console.error('Error fetching home:', e)
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Get first home item (there's usually only one)
+  function getHome() {
+    return homes.value.length > 0 ? homes.value[0] : null
+  }
+
+  // Update home (admin only)
+  async function updateHome(id: string, formData: FormData) {
+    if (!authStore.isAuthenticated) {
+      throw new Error('Authentication required')
+    }
+
+    try {
+      const headers: HeadersInit = {
+        ...authStore.getAuthHeader(),
+      }
+      delete (headers as any)['Content-Type']
+      
+      const response = await fetch(`${authStore.baseURL}/api/v1/dashboard/home/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: formData,
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        const errorMsg = data.message || data.error || 'Failed to update home'
+        return { success: false, error: errorMsg }
+      }
+      
+      if (data.status === 'success') {
+        return { success: true, data: data.data.home }
+      } else {
+        return { success: false, error: data.message || 'Failed to update home' }
+      }
+    } catch (e) {
+      console.error('Error updating home:', e)
+      return { success: false, error: 'Network error. Please try again.' }
+    }
+  }
+
   return {
     journals,
     rabbits,
+    homes,
     loading,
     error,
     fetchJournals,
     fetchRabbits,
+    fetchHome,
     initializeData,
     createJournal,
     createRabbit,
     getJournal,
     getRabbit,
+    getHome,
+    updateJournal,
+    deleteJournal,
+    updateRabbit,
+    deleteRabbit,
+    updateHome,
   }
 })

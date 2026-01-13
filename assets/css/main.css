@@ -740,6 +740,32 @@ body {
       0 0 25px rgba(103, 125, 183, 0.3) !important;
   }
 
+  .retro-button-edit {
+    background: rgba(255, 182, 193, 0.3) !important;
+    border: 2px solid #ff6b9d !important;
+    border-radius: 8px !important;
+    color: #ff6b9d !important;
+    padding: 6px !important;
+    min-width: auto !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
+  }
+
+  .retro-button-edit:hover {
+    background: rgba(255, 182, 193, 0.5) !important;
+    border-color: #c44569 !important;
+    color: #c44569 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 
+      0 0 15px rgba(255, 107, 157, 0.5),
+      0 0 25px rgba(196, 69, 105, 0.3) !important;
+  }
+
   main .retro-card .retro-title {
     font-family: 'Bubblegum Sans', 'Chewy', 'Comic Neue', cursive, sans-serif;
     font-weight: 600;
