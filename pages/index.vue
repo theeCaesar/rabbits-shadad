@@ -271,13 +271,13 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
           </div>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
           <Card 
             v-for="journal in journals" 
             :key="journal._id"
             :class="[
               'retro-card cursor-pointer transition-all duration-300',
-              expandedPostId === journal._id ? 'retro-card-expanded col-span-full md:col-span-2 lg:col-span-3' : 'hover:scale-105 max-h-48'
+              expandedPostId === journal._id ? 'retro-card-expanded col-span-2 md:col-span-2 lg:col-span-3' : 'hover:scale-105 max-h-48'
             ]"
             @click="toggleExpandPost(journal._id)"
           >
@@ -288,72 +288,72 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader :class="expandedPostId === journal._id ? 'p-6 pb-4' : 'p-2 pb-1'">
-              <div class="flex items-start justify-between gap-4">
+            <CardHeader :class="expandedPostId === journal._id ? 'p-4 md:p-6 pb-3 md:pb-4' : 'p-2 pb-1'">
+              <div class="flex items-start justify-between gap-2 md:gap-4 min-w-0">
                 <CardTitle :class="[
-                  'retro-title mb-1',
-                  expandedPostId === journal._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
-                ]">
+                  'retro-title mb-1 min-w-0 flex-1',
+                  expandedPostId === journal._id ? 'text-lg md:text-2xl lg:text-3xl' : 'text-xs md:text-sm lg:text-base line-clamp-1'
+                ]" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
                   Journal Entry
                 </CardTitle>
-                <div v-if="expandedPostId === journal._id" class="flex items-center gap-2">
+                <div v-if="expandedPostId === journal._id" class="flex items-center gap-1 md:gap-2 flex-shrink-0">
                   <Button 
                     v-if="authStore.isAdmin"
                     @click.stop="router.push(`/dashboard/edit-journal/${journal._id}`)"
                     class="retro-button-edit flex-shrink-0"
                     size="sm"
                   >
-                    <Pencil class="w-4 h-4" />
+                    <Pencil class="w-3 h-3 md:w-4 md:h-4" />
                   </Button>
                   <Button 
                     @click.stop="toggleExpandPost(journal._id)"
                     class="retro-button-close flex-shrink-0"
                     size="sm"
                   >
-                    <X class="w-4 h-4" />
+                    <X class="w-3 h-3 md:w-4 md:h-4" />
                   </Button>
                 </div>
               </div>
               <div v-if="expandedPostId === journal._id" class="flex items-center gap-2 text-xs text-gray-600 mt-2">
                 <div class="flex items-center gap-0.5">
-                  <Calendar class="w-4 h-4" />
-                  <span class="text-sm">{{ formatDate(journal.date) }}</span>
+                  <Calendar class="w-3 h-3 md:w-4 md:h-4" />
+                  <span class="text-xs md:text-sm">{{ formatDate(journal.date) }}</span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent :class="expandedPostId === journal._id ? 'p-6 pt-4' : 'p-2'">
+            <CardContent :class="expandedPostId === journal._id ? 'p-4 md:p-6 pt-3 md:pt-4' : 'p-2'" style="overflow: hidden; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
               <!-- Expanded layout: image left, content right -->
-              <div v-if="expandedPostId === journal._id" class="flex flex-col md:flex-row gap-6">
+              <div v-if="expandedPostId === journal._id" class="flex flex-col md:flex-row gap-4 md:gap-6 min-w-0">
                 <!-- Image on left -->
-                <div v-if="journal.images && journal.images.length > 0" class="flex-shrink-0 md:w-1/2">
+                <div v-if="journal.images && journal.images.length > 0" class="flex-shrink-0 w-full md:w-1/2 min-w-0">
                   <img 
                     :src="getImageUrl(journal.images[0])" 
                     :alt="'Journal image'"
-                    class="w-full h-auto object-cover rounded-lg"
+                    class="w-full h-auto max-h-64 md:max-h-none object-cover rounded-lg max-w-full"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
                 <!-- Content on right -->
-                <div class="flex-1 flex flex-col">
-                  <p class="text-gray-600 mb-4 leading-relaxed text-base whitespace-pre-wrap">
+                <div class="flex-1 flex flex-col min-w-0">
+                  <p class="text-gray-600 mb-0 md:mb-4 leading-relaxed text-sm md:text-base whitespace-pre-wrap break-words overflow-wrap-anywhere" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
                     {{ journal.text }}
                   </p>
                 </div>
               </div>
               <!-- Collapsed layout: image and date only -->
-              <div v-else>
-                <div v-if="journal.images && journal.images.length > 0" class="mb-2">
+              <div v-else class="space-y-1.5">
+                <div v-if="journal.images && journal.images.length > 0" class="mb-1.5">
                   <img 
                     :src="getImageUrl(journal.images[0])" 
                     :alt="'Journal image'"
-                    class="w-full h-32 object-cover rounded"
+                    class="w-full h-20 md:h-32 object-cover rounded"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
                 <!-- Date below image -->
                 <div class="flex items-center gap-1 text-xs text-gray-600">
-                  <Calendar class="w-2.5 h-2.5" />
-                  <span>{{ formatDate(journal.date) }}</span>
+                  <Calendar class="w-2.5 h-2.5 flex-shrink-0" />
+                  <span class="truncate">{{ formatDate(journal.date) }}</span>
                 </div>
               </div>
             </CardContent>
@@ -375,13 +375,13 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
           </div>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-grow">
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-grow">
           <Card 
             v-for="rabbit in rabbits" 
             :key="rabbit._id"
             :class="[
               'retro-card cursor-pointer transition-all duration-300',
-              expandedPostId === rabbit._id ? 'retro-card-expanded col-span-full md:col-span-2 lg:col-span-3' : 'hover:scale-105 max-h-48'
+              expandedPostId === rabbit._id ? 'retro-card-expanded col-span-2 md:col-span-2 lg:col-span-3' : 'hover:scale-105 max-h-48'
             ]"
             @click="toggleExpandPost(rabbit._id)"
           >
@@ -392,64 +392,64 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
               <span class="rabbit-border rabbit-bottom-left">🐰</span>
               <span class="rabbit-border rabbit-bottom-right">🐰</span>
             </template>
-            <CardHeader :class="expandedPostId === rabbit._id ? 'p-6 pb-4' : 'p-2 pb-1'">
-              <div class="flex items-start justify-between gap-4">
+            <CardHeader :class="expandedPostId === rabbit._id ? 'p-4 md:p-6 pb-3 md:pb-4' : 'p-2 pb-1'">
+              <div class="flex items-start justify-between gap-2 md:gap-4 min-w-0">
                 <CardTitle :class="[
-                  'retro-title mb-1',
-                  expandedPostId === rabbit._id ? 'text-2xl md:text-3xl' : 'text-sm md:text-base line-clamp-1'
-                ]">
+                  'retro-title mb-1 min-w-0 flex-1',
+                  expandedPostId === rabbit._id ? 'text-lg md:text-2xl lg:text-3xl' : 'text-xs md:text-sm lg:text-base line-clamp-1'
+                ]" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
                   {{ rabbit.name }}
                 </CardTitle>
-                <div v-if="expandedPostId === rabbit._id" class="flex items-center gap-2">
+                <div v-if="expandedPostId === rabbit._id" class="flex items-center gap-1 md:gap-2 flex-shrink-0">
                   <Button 
                     v-if="authStore.isAdmin"
                     @click.stop="router.push(`/dashboard/edit-rabbit/${rabbit._id}`)"
                     class="retro-button-edit flex-shrink-0"
                     size="sm"
                   >
-                    <Pencil class="w-4 h-4" />
+                    <Pencil class="w-3 h-3 md:w-4 md:h-4" />
                   </Button>
                   <Button 
                     @click.stop="toggleExpandPost(rabbit._id)"
                     class="retro-button-close flex-shrink-0"
                     size="sm"
                   >
-                    <X class="w-4 h-4" />
+                    <X class="w-3 h-3 md:w-4 md:h-4" />
                   </Button>
                 </div>
               </div>
-              <div class="flex items-center gap-2 text-xs text-gray-600" :class="expandedPostId === rabbit._id ? 'mt-2' : ''">
+              <div class="flex items-center gap-2 md:gap-3 text-xs text-gray-600 flex-wrap" :class="expandedPostId === rabbit._id ? 'mt-2' : ''">
                 <div v-if="rabbit.age" class="flex items-center gap-0.5">
-                  <span :class="expandedPostId === rabbit._id ? 'text-base' : 'text-xs'">🐰</span>
-                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ rabbit.age }} years</span>
+                  <span :class="expandedPostId === rabbit._id ? 'text-sm md:text-base' : 'text-xs'">🐰</span>
+                  <span :class="expandedPostId === rabbit._id ? 'text-xs md:text-sm' : 'text-xs'">{{ rabbit.age }} years</span>
                 </div>
                 <div v-if="rabbit.birthDate" class="flex items-center gap-0.5">
-                  <Calendar :class="expandedPostId === rabbit._id ? 'w-4 h-4' : 'w-2.5 h-2.5'" />
-                  <span :class="expandedPostId === rabbit._id ? 'text-sm' : 'text-xs'">{{ formatDate(rabbit.birthDate) }}</span>
+                  <Calendar :class="expandedPostId === rabbit._id ? 'w-3 h-3 md:w-4 md:h-4' : 'w-2.5 h-2.5'" />
+                  <span :class="expandedPostId === rabbit._id ? 'text-xs md:text-sm' : 'text-xs'">{{ formatDate(rabbit.birthDate) }}</span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent :class="expandedPostId === rabbit._id ? 'p-6 pt-4' : 'p-2 pt-1'">
+            <CardContent :class="expandedPostId === rabbit._id ? 'p-4 md:p-6 pt-3 md:pt-4' : 'p-2 pt-1'" style="overflow: hidden; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
               <!-- Expanded layout: image left, content right -->
-              <div v-if="expandedPostId === rabbit._id" class="flex flex-col md:flex-row gap-6">
+              <div v-if="expandedPostId === rabbit._id" class="flex flex-col md:flex-row gap-4 md:gap-6 min-w-0">
                 <!-- Image on left -->
-                <div v-if="rabbit.images && rabbit.images.length > 0" class="flex-shrink-0 md:w-1/2">
+                <div v-if="rabbit.images && rabbit.images.length > 0" class="flex-shrink-0 w-full md:w-1/2 min-w-0">
                   <img 
                     :src="getImageUrl(rabbit.images[0])" 
                     :alt="rabbit.name"
-                    class="w-full h-auto object-cover rounded-lg"
+                    class="w-full h-auto max-h-64 md:max-h-none object-cover rounded-lg max-w-full"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
                 <!-- Content on right -->
-                <div class="flex-1 flex flex-col">
-                  <p v-if="rabbit.description" class="text-gray-600 mb-4 leading-relaxed text-base whitespace-pre-wrap">
+                <div class="flex-1 flex flex-col min-w-0">
+                  <p v-if="rabbit.description" class="text-gray-600 mb-3 md:mb-4 leading-relaxed text-sm md:text-base whitespace-pre-wrap break-words overflow-wrap-anywhere" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
                     {{ rabbit.description }}
                   </p>
-                  <div v-if="rabbit.favoriteSnake" class="mt-auto">
-                    <h4 class="text-sm font-semibold text-gray-700 mb-2">Favorite Snack</h4>
-                    <ul class="list-disc list-inside text-gray-600 space-y-1 text-base">
-                      <li v-for="(snack, index) in rabbit.favoriteSnake.split(',').map(s => s.trim()).filter(s => s)" :key="index">
+                  <div v-if="rabbit.favoriteSnake" class="mt-auto min-w-0">
+                    <h4 class="text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2 break-words" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">Favorite Snack</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-0.5 md:space-y-1 text-xs md:text-base break-words" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
+                      <li v-for="(snack, index) in rabbit.favoriteSnake.split(',').map(s => s.trim()).filter(s => s)" :key="index" class="break-words" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%;">
                         {{ snack }}
                       </li>
                     </ul>
@@ -457,18 +457,15 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
                 </div>
               </div>
               <!-- Collapsed layout: stacked -->
-              <div v-else>
-                <div v-if="rabbit.images && rabbit.images.length > 0" class="mb-2">
+              <div v-else class="space-y-1.5">
+                <div v-if="rabbit.images && rabbit.images.length > 0" class="mb-1.5">
                   <img 
                     :src="getImageUrl(rabbit.images[0])" 
                     :alt="rabbit.name"
-                    class="w-full h-24 object-cover rounded"
+                    class="w-full h-20 md:h-24 object-cover rounded"
                     @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                   />
                 </div>
-                <p v-if="rabbit.description" class="text-gray-600 mb-1.5 line-clamp-2 text-xs leading-snug">
-                  {{ rabbit.description.substring(0, 60) }}{{ rabbit.description.length > 60 ? '...' : '' }}
-                </p>
               </div>
             </CardContent>
           </Card>
