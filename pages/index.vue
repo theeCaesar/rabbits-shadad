@@ -166,11 +166,11 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
     <div class="flex flex-1 justify-center">
       <div class="flex flex-col md:flex-row max-w-[1800px] w-full">
         <!-- Left Sidebar with Image and Name -->
-        <aside class="w-full md:w-96 flex-shrink-0 p-4 md:p-8 relative z-10">
-          <div class="sticky top-6">
+        <aside class="w-full md:w-96 flex-shrink-0 p-3 md:p-8 relative z-10">
+          <div class="sticky top-4 md:top-6">
             <!-- Profile Image -->
-            <div class="retro-card p-4 md:p-8 mb-4 md:mb-6 text-center flex flex-col items-center">
-              <div class="w-48 h-48 md:w-80 md:h-80 bg-transparent rounded-lg border-4 border-pink-300 flex items-center justify-center mb-4 md:mb-6 overflow-hidden">
+            <div class="retro-card p-3 md:p-8 mb-4 md:mb-6 text-center flex flex-col items-center w-full" style="overflow: visible !important;">
+              <div class="w-32 h-32 md:w-80 md:h-80 bg-transparent rounded-lg border-4 border-pink-300 flex items-center justify-center mb-3 md:mb-6 overflow-hidden">
                 <img 
                   v-if="homePersonalImage"
                   :src="homePersonalImage" 
@@ -178,12 +178,12 @@ import rabbitImageNew from '~/assets/css/1000056349-removebg-preview.png'
                   class="w-full h-full object-contain object-center"
                   style="background: transparent;"
                 />
-                <span v-else class="text-6xl">🐰</span>
+                <span v-else class="text-4xl md:text-6xl">🐰</span>
               </div>
               <!-- Name Title -->
-              <h1 class="retro-title text-2xl md:text-4xl lg:text-5xl font-bold">
-                <span class="retro-gradient">
-                  shahad josta<span class="relative inline-block">r<span class="absolute -top-2 -right-2 text-yellow-300 text-sm">★</span></span>
+              <h1 class="retro-title text-lg md:text-2xl lg:text-3xl font-bold leading-tight w-full px-2 py-2" style="overflow: visible !important; position: relative;">
+                <span class="retro-gradient inline-block whitespace-nowrap max-w-full relative" style="overflow: visible !important;">
+                  shahad josta<span class="relative inline-block align-baseline" style="overflow: visible !important;">r<span class="absolute -top-3 md:-top-4 lg:-top-5 left-1/2 -translate-x-1/2 text-yellow-300 text-xs md:text-sm lg:text-base leading-none z-50" style="overflow: visible !important;">★</span></span>
                 </span>
               </h1>
             </div>
